@@ -36,7 +36,12 @@ jobs:
       - name: Start MiniStack
         run: |
           REDIS_HOST=localhost python -m hypercorn ministack.app:app --bind 0.0.0.0:4566 --keep-alive 75 > ministack.log 2>&1 &
-          sleep 3
+          # Poll readiness instead of a fixed sleep — importing ~69 services can
+          # take a few seconds and race a single post-sleep curl (exit 7).
+          for _ in $(seq 1 30); do
+            curl -sf http://localhost:4566/_ministack/health && break
+            sleep 1
+          done
           curl -sf http://localhost:4566/_ministack/health
 
       - name: Run tests (parallel safe set)
