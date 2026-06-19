@@ -5,6 +5,11 @@ All notable changes to MiniStack will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versioning follows [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **SNS — mobile-push platform endpoint APIs** — `GetEndpointAttributes`, `SetEndpointAttributes`, `DeleteEndpoint`, and `DeletePlatformApplication` previously failed with `InvalidAction`; `CreatePlatformEndpoint` always created a new endpoint (ignoring AWS's idempotent dedup-by-`Token` and the `CustomUserData` parameter); and `Publish` to a platform-endpoint `TargetArn` returned `Topic does not exist`. They are now implemented with AWS-accurate semantics — idempotent `CreatePlatformEndpoint` (same `Token`+attributes returns the existing ARN, differing attributes raise `InvalidParameter` "already exists with the same Token, but different attributes"), endpoint attribute get/set/delete with `NotFound` semantics, `DeletePlatformApplication` cascading to its endpoints, and `Publish` to an endpoint `TargetArn` — unblocking device-token push flows.
+
 ## [1.3.65] — 2026-06-19
 
 ### Fixed
