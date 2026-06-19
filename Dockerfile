@@ -1,4 +1,4 @@
-FROM python:3.12-alpine AS builder
+FROM public.ecr.aws/docker/library/python:3.12-alpine AS builder
 
 RUN pip install --no-cache-dir --no-compile \
         hypercorn==0.18.0 \
@@ -18,7 +18,7 @@ RUN rm -rf /usr/local/lib/python3.12/site-packages/awscli/examples \
     && rm -rf /usr/local/lib/python3.12/site-packages/pip*.dist-info \
     && rm -rf /usr/local/lib/python3.12/site-packages/pip*
 
-FROM python:3.12-alpine
+FROM public.ecr.aws/docker/library/python:3.12-alpine
 
 LABEL maintainer="MiniStack" \
       description="Local AWS Service Emulator — drop-in LocalStack replacement"
